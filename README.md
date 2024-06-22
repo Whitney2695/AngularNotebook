@@ -1,3 +1,4 @@
+### homepage
 ![homepage](./imgs/Home.PNG)
 ![addNote](./imgs/addNote.PNG)
 ![allnotes](./imgs/Notes.PNG)
