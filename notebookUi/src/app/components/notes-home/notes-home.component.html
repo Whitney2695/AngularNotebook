@@ -1,0 +1,217 @@
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+    }
+
+    app-navbar {
+        width: 20%;
+        min-width: 250px;
+        height: 100vh;
+        color: #ecf0f1;
+        position: fixed;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    main {
+        margin-left: 20%;
+        width: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+        padding: 20px;
+    }
+
+    #welcome {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        color: #fff;
+        margin-top: 60px;
+    }
+
+    #welcome h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .note-card {
+        width: calc(33.33% - 20px); /* 3 notes per row with 20px gap */
+        margin: 10px;
+        background-color: #fff;
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .note-card h4 {
+        font-size: 1.5em;
+        margin-bottom: 10px;
+        color: #a44eff;
+    }
+
+    .note-card p {
+        font-size: 1em;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+    }
+
+    .delete-button, .update-button {
+        background-color: #a44eff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .delete-button:hover, .update-button:hover {
+        background-color: #8a30ff;
+    }
+
+    .input-form {
+        width: 100%;
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        color: #000;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+    }
+
+    .input-form input {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 1em;
+        border-radius: 5px;
+    }
+
+    .input-form button {
+        width: 100%;
+        padding: 10px 0;
+        margin-top: 10px;
+        font-size: 1em;
+        background-color: #a44eff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .input-form button:hover {
+        background-color: #8a30ff;
+    }
+
+    .single-note-wrapper {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 40px 30px;
+        border-radius: 10px;
+        z-index: 1000;
+        width: 80%;
+        max-width: 700px;
+        text-align: center;
+    }
+
+    .single-note-wrapper h3 {
+        font-size: 30px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .single-note-wrapper p {
+        font-size: 22px;
+    }
+
+    .single-note-wrapper button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1em;
+        background-color: #a44eff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .single-note-wrapper button:hover {
+        background-color: #8a30ff;
+    }
+</style>
+
+<body>
+    <app-navbar></app-navbar>
+    <main>
+        <div id="welcome">
+            <h1 style="color: #000;">Welcome to Girly Notes</h1>
+        </div>
+
+        <div *ngIf="notes.length > 0; else noNotes" style="width: 100%; display: flex; flex-wrap: wrap; justify-content: space-around;">
+            <div *ngFor="let note of notes; let i = index" class="note-card" (click)="showSingleNoteView(note)">
+                <div class="note">
+                    <h4>{{ note.title }}</h4>
+                    <p>{{ note.content }}</p>
+                </div>
+                <div class="buttons">
+                    <button class="update-button" (click)="showUpdateForm(note.id, note.title, note.content); $event.stopPropagation();">Edit note</button>
+                    <button style="background-color: #ff6ec4;" class="delete-button" (click)="deleteNote(i, note.id)">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #noNotes>
+            <p>No notes available.</p>
+        </ng-template>
+    </main>
+
+    <div *ngIf="isUpdateFormVisible" class="single-note-wrapper">
+        <form class="input-form" (ngSubmit)="onUpdateSubmit()">
+            <h3>Edit Note</h3>
+            <input type="text" [(ngModel)]="updateTitle" name="title" placeholder="Title" required />
+            <input type="text" [(ngModel)]="updateContent" name="content" placeholder="Content" required />
+            <button type="submit">Update</button>
+            <button type="button" (click)="hideUpdateForm()">Cancel</button>
+        </form>
+    </div>
+
+    <div *ngIf="isSingleNoteViewVisible" class="single-note-wrapper">
+        <div>
+            <h3>{{ singleNote?.title }}</h3>
+            <p>{{ singleNote?.content }}</p>
+            <button (click)="hideSingleNoteView()">Close</button>
+        </div>
+    </div>
+</body>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Form</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #ff6ec4, #a44eff, #4a8eff);
+            height: 100vh;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+           
+            border-radius: 10px;
+            
+        }
+
+        #welcome {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: #ccc;
+            margin-top: 60px;
+        }
+
+        #notesButton {
+            background-color: #151515;
+            color: #ccc;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+            border-radius: 20px;
+            border: 2px solid;
+        }
+
+        #notesButton:hover {
+            background: linear-gradient(135deg, #ff6ec4, #a44eff, #4a8eff);
+            color: #151515;
+            transition: background-color 0.3s ease;
+        }
+
+        .input-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            width: 100%;
+            max-width: 400px;
+            margin-top: 20px;
+            border-radius: 10px;
+            padding: 40px;
+        }
+        
+
+        .input-form input {
+            background-color: #ffc1f8;
+            color: #333;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 1em;
+            width: 90%;
+        }
+
+        .input-form input::placeholder {
+            color: #888;
+        }
+
+        .input-form button {
+            background-color: #ff6ec4;
+            color: #373636;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1.2em;
+            border-radius: 20px;
+            border: 2px solid;
+            margin-top: 20px;
+        }
+
+        .input-form button:hover {
+            background-color: #ccc;
+            background: linear-gradient(135deg, #ff6ec4, #a44eff, #4a8eff);
+            transition: background-color 0.3s ease;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        .error {
+            border-color: red;
+        }
+
+        .page-title {
+            color: #333;
+            font-size: 30px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .note-text {
+            color: #888;
+            font-size: 16px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <app-navbar></app-navbar>
+    <main>
+        <div id="welcome">
+            <h1>Create and manage your notes easily</h1>
+            
+        </div>
+        <form [formGroup]="notesForm" (ngSubmit)="grabForm()" class="input-form" style="border: 2px solid black;">
+            <label>Title</label>
+            <input type="text" formControlName="title"  required />
+            <div *ngIf="notesForm.get('title')?.invalid && (notesForm.get('title')?.touched || notesForm.get('title')?.dirty)"
+                class="error-message">
+                Title cannot be empty
+            </div>
+            <label>Note:</label>
+            <input type="text" formControlName="note"  required />
+            <div *ngIf="notesForm.get('note')?.invalid && (notesForm.get('note')?.touched || notesForm.get('note')?.dirty)"
+                class="error-message">
+                Content cannot be empty
+            </div>
+            <button type="submit">ADD</button>
+        </form>
+        <p class="page-title">Create Your Note</p>
+    </main>
+</body>
+
+</html>
