@@ -1,2 +1,6 @@
-use notes;
+use Notes;
 select * from notes;
+
+
+
+
